@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CalcVerse | Advanced Double Integration Lab</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:linear-gradient(135deg,#dbeafe,#ede9fe,#f5f3ff);
+overflow-x:hidden;
+color:#111827;
+}
+
+.start-screen{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+background:linear-gradient(135deg,#4338ca,#7c3aed);
+color:white;
+}
+
+.start-content h1{
+font-size:70px;
+margin-bottom:25px;
+}
+
+.start-content p{
+font-size:24px;
+line-height:1.8;
+max-width:850px;
+margin:auto;
+}
+
+.start-btn{
+margin-top:40px;
+padding:18px 45px;
+border:none;
+border-radius:15px;
+background:white;
+color:#4f46e5;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+.start-btn:hover{
+transform:scale(1.08);
+}
+
+.main-site{
+display:none;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 60px;
+background:white;
+position:sticky;
+top:0;
+z-index:1000;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.logo{
+font-size:34px;
+font-weight:bold;
+color:#6d28d9;
+}
+
+nav ul{
+display:flex;
+gap:25px;
+list-style:none;
+}
+
+nav ul li a{
+text-decoration:none;
+font-weight:bold;
+color:#111827;
+}
+
+.hero{
+padding:100px 20px;
+text-align:center;
+}
+
+.hero h1{
+font-size:68px;
+color:#4338ca;
+margin-bottom:25px;
+}
+
+.hero p{
+font-size:22px;
+max-width:900px;
+margin:auto;
+line-height:1.9;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+padding:20px;
+max-width:1200px;
+margin:auto;
+}
+
+.stat{
+background:white;
+padding:35px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat h2{
+font-size:42px;
+color:#6d28d9;
+margin-bottom:10px;
+}
+
+section{
+padding:90px 25px;
+max-width:1200px;
+margin:auto;
+}
+
+.section-title{
+font-size:48px;
+text-align:center;
+margin-bottom:60px;
+color:#4338ca;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+}
+
+.card{
+background:white;
+padding:35px;
+border-radius:22px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-7px);
+}
+
+.card h3{
+margin-bottom:18px;
+color:#6d28d9;
+}
+
+.card p{
+line-height:1.8;
+}
+
+.formula{
+font-size:34px;
+font-weight:bold;
+text-align:center;
+color:#7c3aed;
+padding:20px;
+}
+
+.solver{
+background:white;
+padding:40px;
+border-radius:25px;
+max-width:800px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.solver input{
+width:100%;
+padding:15px;
+margin:12px 0;
+border-radius:12px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+.solve-btn{
+width:100%;
+padding:16px;
+background:#4f46e5;
+color:white;
+border:none;
+border-radius:14px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+margin-top:15px;
+}
+
+.output{
+margin-top:25px;
+padding:25px;
+background:#eef2ff;
+border-radius:18px;
+line-height:2;
+font-size:18px;
+}
+
+.quiz-box{
+background:white;
+padding:40px;
+border-radius:25px;
+max-width:850px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.timer{
+font-size:28px;
+font-weight:bold;
+color:#dc2626;
+margin-bottom:20px;
+text-align:center;
+}
+
+.question{
+font-size:24px;
+margin-bottom:25px;
+font-weight:bold;
+}
+
+.option{
+display:block;
+width:100%;
+padding:15px;
+margin:10px 0;
+border:none;
+border-radius:12px;
+background:#ede9fe;
+cursor:pointer;
+font-size:17px;
+transition:0.3s;
+}
+
+.option:hover{
+background:#c4b5fd;
+}
+
+.result{
+margin-top:20px;
+font-size:24px;
+font-weight:bold;
+text-align:center;
+}
+
+.team{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.member{
+background:white;
+padding:30px;
+border-radius:22px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.circle{
+width:85px;
+height:85px;
+border-radius:50%;
+background:#c4b5fd;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+font-weight:bold;
+margin:auto;
+color:#4c1d95;
+}
+
+.member h3{
+margin-top:15px;
+}
+
+footer{
+background:#4338ca;
+color:white;
+text-align:center;
+padding:22px;
+font-size:18px;
+margin-top:50px;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:45px;
+}
+
+.start-content h1{
+font-size:45px;
+}
+
+nav{
+padding:15px 20px;
+}
+
+nav ul{
+display:none;
+}
+
+.section-title{
+font-size:36px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="start-screen" id="startScreen">
+
+<div class="start-content">
+
+<h1>CalcVerse</h1>
+
+<p>
+Advanced Double Integration Learning Platform with
+Interactive Solver, MCQ Quiz, Timer and Step-by-Step Calculations.
+</p>
+
+<button class="start-btn" onclick="openWebsite()">
+
+START PROJECT
+
+</button>
+
+</div>
+
+</div>
+
+<div class="main-site" id="mainSite">
+
+<nav>
+
+<div class="logo">CalcVerse</div>
+
+<ul>
+<li><a href="#theory">Theory</a></li>
+<li><a href="#solver">Solver</a></li>
+<li><a href="#quiz">MCQ Quiz</a></li>
+<li><a href="#team">Team</a></li>
+</ul>
+
+</nav>
+
+<div class="hero">
+
+<h1>Master Double Integration</h1>
+
+<p>
+Learn Multivariable Calculus through interactive theory,
+step-by-step solving and advanced quiz practice.
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h2>25+</h2>
+<p>Examples</p>
+</div>
+
+<div class="stat">
+<h2>10+</h2>
+<p>MCQ Questions</p>
+</div>
+
+<div class="stat">
+<h2>3D</h2>
+<p>Visual Learning</p>
+</div>
+
+<div class="stat">
+<h2>100%</h2>
+<p>Interactive</p>
+</div>
+
+</div>
+
+<section id="theory">
+
+<h2 class="section-title">
+Theory of Double Integration
+</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Definition</h3>
+
+<p>
+Double integration extends single variable integration
+to functions involving x and y.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Area Calculation</h3>
+
+<p>
+When f(x,y)=1, the integral calculates area of region R.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Volume Calculation</h3>
+
+<p>
+Double integration calculates volume under surfaces.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="solver">
+
+<h2 class="section-title">
+Step-by-Step Solver
+</h2>
+
+<div class="solver">
+
+<input type="text"
+id="func"
+placeholder="Enter function example: x+2*y">
+
+<input type="number"
+id="x1"
+placeholder="X lower limit">
+
+<input type="number"
+id="x2"
+placeholder="X upper limit">
+
+<input type="number"
+id="y1"
+placeholder="Y lower limit">
+
+<input type="number"
+id="y2"
+placeholder="Y upper limit">
+
+<button class="solve-btn"
+onclick="solveIntegration()">
+
+Solve Integration
+
+</button>
+
+<div class="output" id="output">
+
+Solution will appear here.
+
+</div>
+
+</div>
+
+</section>
+
+<section id="quiz">
+
+<h2 class="section-title">
+MCQ Quiz Challenge
+</h2>
+
+<div class="quiz-box">
+
+<div class="timer" id="timer">
+
+Time Left: 60s
+
+</div>
+
+<div class="question" id="question">
+
+Loading Question...
+
+</div>
+
+<button class="option" onclick="checkAnswer(0)" id="opt0"></button>
+
+<button class="option" onclick="checkAnswer(1)" id="opt1"></button>
+
+<button class="option" onclick="checkAnswer(2)" id="opt2"></button>
+
+<button class="option" onclick="checkAnswer(3)" id="opt3"></button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+</section>
+
+<section id="team">
+
+<h2 class="section-title">
+Project Contributors
+</h2>
+
+<div class="team">
+
+<div class="member">
+
+<div class="circle">VL</div>
+
+<h3>Vaibhavi Lomate</h3>
+
+<p>PRN: 125B1D003</p>
+
+</div>
+
+<div class="member">
+
+<div class="circle">MN</div>
+
+<h3>Meghana Nakade</h3>
+
+<p>PRN: 125B1D019</p>
+
+</div>
+
+<div class="member">
+
+<div class="circle">SP</div>
+
+<h3>Shruti Pathak</h3>
+
+<p>PRN: 125B1D017</p>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+Advanced Double Integration Project © 2026
+
+</footer>
+
+</div>
+
+<script>
+
+function openWebsite(){
+
+document.getElementById("startScreen").style.display="none";
+
+document.getElementById("mainSite").style.display="block";
+
+}
+
+function solveIntegration(){
+
+let func=document.getElementById("func").value;
+
+let x1=parseFloat(document.getElementById("x1").value);
+
+let x2=parseFloat(document.getElementById("x2").value);
+
+let y1=parseFloat(document.getElementById("y1").value);
+
+let y2=parseFloat(document.getElementById("y2").value);
+
+let output=document.getElementById("output");
+
+try{
+
+let expr=math.compile(func);
+
+let dx=(x2-x1)/100;
+
+let dy=(y2-y1)/100;
+
+let sum=0;
+
+for(let x=x1;x<x2;x+=dx){
+
+for(let y=y1;y<y2;y+=dy){
+
+sum += expr.evaluate({x:x,y:y})*dx*dy;
+
+}
+
+}
+
+output.innerHTML=`
+
+<h3>Step-by-Step Solution</h3>
+
+<p><b>Function:</b> ${func}</p>
+
+<p><b>Limits:</b></p>
+
+<p>x : ${x1} to ${x2}</p>
+
+<p>y : ${y1} to ${y2}</p>
+
+<p><b>Step 1:</b> Divide region into small rectangles.</p>
+
+<p><b>Step 2:</b> Evaluate f(x,y) over each rectangle.</p>
+
+<p><b>Step 3:</b> Apply numerical double integration.</p>
+
+<p><b>Final Answer:</b> ${sum.toFixed(4)}</p>
+
+`;
+
+}
+
+catch(error){
+
+output.innerHTML=
+"<p style='color:red;'>Invalid Function Input</p>";
+
+}
+
+}
+
+const quiz=[
+
+{
+q:"What does double integration calculate?",
+o:["Area/Volume","Only Area","Only Perimeter","Matrix"],
+a:0
+},
+
+{
+q:"Symbol of double integration is?",
+o:["∬","∑","∫","∆"],
+a:0
+},
+
+{
+q:"Which variable is commonly used?",
+o:["x,y","a,b","m,n","p,q"],
+a:0
+},
+
+{
+q:"If f(x,y)=1 then integral gives?",
+o:["Area","Volume","Speed","Force"],
+a:0
+},
+
+{
+q:"Double integration is part of?",
+o:["Multivariable Calculus","Algebra","Geometry","Statistics"],
+a:0
+}
+
+];
+
+let current=0;
+
+let score=0;
+
+function loadQuestion(){
+
+document.getElementById("question").innerHTML=
+quiz[current].q;
+
+for(let i=0;i<4;i++){
+
+document.getElementById("opt"+i).innerHTML=
+quiz[current].o[i];
+
+}
+
+}
+
+function checkAnswer(i){
+
+if(i==quiz[current].a){
+
+score++;
+
+document.getElementById("result").innerHTML=
+"Correct Answer";
+
+}
+
+else{
+
+document.getElementById("result").innerHTML=
+"Wrong Answer";
+
+}
+
+current++;
+
+if(current<quiz.length){
+
+setTimeout(()=>{
+
+document.getElementById("result").innerHTML="";
+
+loadQuestion();
+
+},1000);
+
+}
+
+else{
+
+document.getElementById("question").innerHTML=
+"Quiz Completed";
+
+document.getElementById("result").innerHTML=
+"Final Score: "+score+"/"+quiz.length;
+
+}
+
+}
+
+loadQuestion();
+
+let time=60;
+
+setInterval(()=>{
+
+time--;
+
+document.getElementById("timer").innerHTML=
+"Time Left: "+time+"s";
+
+if(time<=0){
+
+document.getElementById("timer").innerHTML=
+"Time Over";
+
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>
