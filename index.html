@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Double Integration Solver</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#dbeafe,#ede9fe);
+color:#111827;
+}
+
+header{
+text-align:center;
+padding:50px 20px;
+}
+
+header h1{
+font-size:55px;
+color:#4f46e5;
+margin-bottom:20px;
+}
+
+header p{
+font-size:20px;
+max-width:700px;
+margin:auto;
+line-height:1.7;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:35px;
+border-radius:20px;
+margin-bottom:30px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card h2{
+margin-bottom:20px;
+color:#4338ca;
+}
+
+input{
+width:100%;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#4f46e5;
+color:white;
+border:none;
+border-radius:12px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+margin-top:20px;
+}
+
+button:hover{
+background:#4338ca;
+}
+
+.steps{
+margin-top:25px;
+padding:20px;
+background:#eef2ff;
+border-radius:15px;
+line-height:2;
+font-size:18px;
+}
+
+.formula{
+font-size:28px;
+font-weight:bold;
+text-align:center;
+margin:20px 0;
+color:#7c3aed;
+}
+
+.team{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.member{
+background:#f5f3ff;
+padding:25px;
+border-radius:15px;
+text-align:center;
+}
+
+footer{
+text-align:center;
+padding:20px;
+background:#4f46e5;
+color:white;
+margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>CalcVerse</h1>
+
+<p>
+Interactive Double Integration Solver using Multivariable Calculus.
+Enter functions and limits to solve integration step-by-step.
+</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Double Integration Solver</h2>
+
+<input type="text" id="func" placeholder="Enter function example: x+2*y">
+
+<input type="number" id="x1" placeholder="X lower limit">
+
+<input type="number" id="x2" placeholder="X upper limit">
+
+<input type="number" id="y1" placeholder="Y lower limit">
+
+<input type="number" id="y2" placeholder="Y upper limit">
+
+<button onclick="solveIntegral()">
+Solve Integration
+</button>
+
+<div class="steps" id="output"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Theory</h2>
+
+<p>
+Double integration extends integration to functions of two variables.
+It calculates area and volume over 2D regions.
+</p>
+
+<div class="formula">
+∬ f(x,y)dA
+</div>
+
+<p>
+Applications include engineering, physics, graphics and AI.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Worked Example</h2>
+
+<div class="steps">
+
+<p><b>Question:</b></p>
+
+<p>∬(x+2y)dA over R=[0,2]×[0,1]</p>
+
+<p><b>Step 1:</b></p>
+
+<p>∫₀¹ ∫₀² (x+2y) dxdy</p>
+
+<p><b>Step 2:</b></p>
+
+<p>[x²/2 + 2yx]₀²</p>
+
+<p><b>Step 3:</b></p>
+
+<p>2 + 4y</p>
+
+<p><b>Final Answer:</b> 4</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Project Contributors</h2>
+
+<div class="team">
+
+<div class="member">
+<h3>Vaibhavi Lomate</h3>
+<p>PRN: 125B1D003</p>
+</div>
+
+<div class="member">
+<h3>Meghana Nakade</h3>
+<p>PRN: 125B1D019</p>
+</div>
+
+<div class="member">
+<h3>Shruti Pathak</h3>
+<p>PRN: 125B1D017</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+Double Integration Project © 2026
+</footer>
+
+<script>
+
+function solveIntegral(){
+
+let func=document.getElementById("func").value;
+
+let x1=parseFloat(document.getElementById("x1").value);
+let x2=parseFloat(document.getElementById("x2").value);
+
+let y1=parseFloat(document.getElementById("y1").value);
+let y2=parseFloat(document.getElementById("y2").value);
+
+let output=document.getElementById("output");
+
+try{
+
+let expr=math.compile(func);
+
+let sum=0;
+
+let dx=(x2-x1)/100;
+let dy=(y2-y1)/100;
+
+for(let x=x1;x<x2;x+=dx){
+
+for(let y=y1;y<y2;y+=dy){
+
+sum += expr.evaluate({x:x,y:y})*dx*dy;
+
+}
+
+}
+
+output.innerHTML=`
+
+<h3>Step-by-Step Solution</h3>
+
+<p><b>Function:</b> f(x,y) = ${func}</p>
+
+<p><b>Limits:</b></p>
+
+<p>x: ${x1} to ${x2}</p>
+
+<p>y: ${y1} to ${y2}</p>
+
+<p><b>Step 1:</b> Divide region into small rectangles.</p>
+
+<p><b>Step 2:</b> Evaluate function values over region.</p>
+
+<p><b>Step 3:</b> Apply numerical double integration.</p>
+
+<p><b>Final Answer:</b> ${sum.toFixed(4)}</p>
+
+`;
+
+}
+
+catch(error){
+
+output.innerHTML=
+"<p style='color:red;'>Invalid Function Input</p>";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
